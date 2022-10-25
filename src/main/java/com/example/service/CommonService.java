@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.log.Log;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -26,23 +27,35 @@ public abstract class CommonService {
     }
 
     protected Response postRequest(String uri, Object body) {
-        return requestSpecification.body(body).expect().statusCode(HttpStatus.SC_OK).log().ifError()
+        Log.info("Sending the POST request to the URI " + prepareUri.apply(uri));
+        Response response = requestSpecification.body(body).expect().statusCode(HttpStatus.SC_OK).log().ifError()
                 .when().post(prepareUri.apply(uri));
+        Log.info("Response body is " + response.asPrettyString());
+        return response;
     }
 
     protected Response getRequestQuery(String uri, String status) {
-        return requestSpecification.queryParam("status", status).expect().statusCode(HttpStatus.SC_OK).log().ifError()
+        Log.info("Sending the GET with a query to the URI" + prepareUri.apply(uri));
+        Response response = requestSpecification.queryParam("status", status).expect().statusCode(HttpStatus.SC_OK).log().ifError()
                 .when().get(prepareUri.apply(uri));
+        Log.info("Response body is " + response.asPrettyString());
+        return response;
     }
 
     protected Response getRequest(String uri) {
-        return requestSpecification.expect().statusCode(HttpStatus.SC_OK).log().ifError()
+        Log.info("Sending the GET request to the URI" + prepareUri.apply(uri));
+        Response response = requestSpecification.expect().statusCode(HttpStatus.SC_OK).log().ifError()
                 .when().get(prepareUri.apply(uri));
+        Log.info("Response body is "+ response.asPrettyString());
+        return response;
     }
 
     protected Response putRequest(String uri, Object body) {
-        return requestSpecification.body(body).expect().statusCode(HttpStatus.SC_OK).log().ifError()
+        Log.info("Sending the PUT request to the URI" + prepareUri.apply(uri));
+        Response response= requestSpecification.body(body).expect().statusCode(HttpStatus.SC_OK).log().ifError()
                 .when().put(prepareUri.apply(uri));
+        Log.info("Response body is "+ response.asPrettyString());
+        return response;
 
     }
 
